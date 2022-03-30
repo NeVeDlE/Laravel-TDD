@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ProjectsTest extends TestCase
+class ManageProjectsTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
@@ -16,28 +16,13 @@ class ProjectsTest extends TestCase
     /**
      * @test
      */
-    public function guests_cannot_create_project()
-    {
-        $atr = Project::factory()->raw(['owner_id' => '']);
-        $this->post('/projects', $atr)->assertRedirect('login');
-    }
-
-    /**
-     * @test
-     */
-    public function guests_cannot_view_projects()
-    {
-
-        $this->get('/projects')->assertRedirect('login');
-    }
-
-    /**
-     * @test
-     */
-    public function guests_cannot_view_single_project()
+    public function guests_cannot_manage_projects()
     {
         $project = Project::factory()->create();
         $this->get($project->path())->assertRedirect('login');
+        $this->get('/projects')->assertRedirect('login');
+        $this->get('/projects/create')->assertRedirect('login');
+        $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
 
     /**
@@ -47,6 +32,7 @@ class ProjectsTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->actingAs(User::factory()->create());
+        $this->get('/projects/create')->assertViewIs('projects.create');
         $atr = [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,

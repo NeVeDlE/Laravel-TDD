@@ -9,9 +9,8 @@ class ProjectsController extends Controller
     //
     public function index()
     {
-        $projects = auth()->user()->projects;
         return view('projects.index', [
-            'projects' => $projects
+            'projects' => auth()->user()->projects
         ]);
     }
 
@@ -38,9 +37,9 @@ class ProjectsController extends Controller
             'title' => 'required',
             'description' => 'required',
         ]);
-        auth()->user()->projects()->create($atr);
+        $project = auth()->user()->projects()->create($atr);
         /*  $atr['owner_id'] = auth()->id();
           Project::create($atr);*/
-        return redirect('/projects');
+        return redirect($project->path());
     }
 }

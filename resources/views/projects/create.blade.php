@@ -11,21 +11,10 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form method="POST" action="/projects" class="text-center flex-col ">
                         @csrf
-                        <div class="mb-4">
-                            <label for="title">Title </label>
-                            <input type="text" class="input" name="title" placeholder="Title">
-
-                        </div>
-                        <div class="mb-4">
-                            <label for="description">Description </label>
-                            <textarea type="text" class="input" name="description" placeholder="Title"></textarea>
-
-                        </div>
-                        <div class="mb-4">
-                            <button type="submit" class="bg-gray-100">Submit</button>
-                        </div>
-                        <div class="mb-4">
-                            <a href="/projects">back to projects</a>
+                        <x-form.input name="title" :value="old('title')"/>
+                        <x-form.textarea name="description">{{old('description')}}</x-form.textarea>
+                        <div class="mb-6">
+                            <x-submit-button>Publish</x-submit-button>
                         </div>
 
                     </form>

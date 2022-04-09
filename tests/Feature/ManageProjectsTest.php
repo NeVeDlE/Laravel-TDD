@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ManageProjectsTest extends TestCase
@@ -31,15 +32,15 @@ class ManageProjectsTest extends TestCase
     public function a_user_can_create_a_project()
     {
         $this->withoutExceptionHandling();
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
         $this->get('/projects/create')->assertViewIs('projects.create');
         $atr = [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
         ];
-        $this->post('/projects', $atr)->assertRedirect('/projects');
+        $response = $this->post('/projects', $atr);
+        $response->assertRedirect(Project::where($atr)->first()->path());
         $this->assertDatabaseHas('projects', $atr);
-
         $this->get('/projects')->assertSee($atr['title']);
     }
 
@@ -49,12 +50,13 @@ class ManageProjectsTest extends TestCase
     public function a_user_can_view_their_project()
     {
 
-        $this->be(User::factory()->create());
+        $this->signIn();
 
+        $this->withoutExceptionHandling();
         $project = Project::factory()->create(['owner_id' => auth()->id()]);
         $this->get($project->path())
             ->assertSee($project->title)
-            ->assertSee($project->description);
+            ->assertSee(Str::limit($project->description, 100));
     }
 
     /**
@@ -62,7 +64,7 @@ class ManageProjectsTest extends TestCase
      */
     public function an_authenticated_user_cannot_view_the_project_of_others()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
         $project = Project::factory()->create(['owner_id' => User::factory()->create()->id]);
         $this->get($project->path())
             ->assertStatus(403);
@@ -74,7 +76,7 @@ class ManageProjectsTest extends TestCase
      */
     public function a_project_requires_a_title()
     {
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
         $atr = Project::factory()->raw(['title' => '']);
         $this->post('/projects', $atr)->assertSessionHasErrors('title');
     }
@@ -84,7 +86,7 @@ class ManageProjectsTest extends TestCase
      */
     public function a_project_requires_a_description()
     {
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
         $atr = Project::factory()->raw(['description' => '']);
         $this->post('/projects', $atr)->assertSessionHasErrors('description');
     }

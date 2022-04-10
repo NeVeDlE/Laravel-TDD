@@ -11,9 +11,7 @@ class ProjectTasksController extends Controller
 
     public function store(Project $project)
     {
-        if (auth()->id() != $project->owner_id) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
         request()->validate(['body' => 'required']);
         $project->addTask(request('body'));
         return redirect($project->path());
@@ -21,9 +19,7 @@ class ProjectTasksController extends Controller
 
     public function update(Project $project, Task $task)
     {
-        if (auth()->id() != $project->owner_id) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
         request()->validate(['body' => 'required']);
         $task->update([
             'body' => request('body'),

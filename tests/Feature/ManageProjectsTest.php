@@ -31,17 +31,38 @@ class ManageProjectsTest extends TestCase
      */
     public function a_user_can_create_a_project()
     {
+
         $this->withoutExceptionHandling();
         $this->signIn();
         $this->get('/projects/create')->assertViewIs('projects.create');
         $atr = [
             'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->sentence,
+            'notes' => 'General notes here.'
         ];
         $response = $this->post('/projects', $atr);
-        $response->assertRedirect(Project::where($atr)->first()->path());
+        $project = Project::where($atr)->first();
+        $response->assertRedirect($project->path());
         $this->assertDatabaseHas('projects', $atr);
-        $this->get('/projects')->assertSee($atr['title']);
+        $this->get($project->path())
+            ->assertSee($atr['title'])
+            ->assertSee($atr['description'])
+            ->assertSee($atr['notes']);
+    }
+
+    /**
+     * @test
+     */
+    public function a_user_can_update_a_project()
+    {
+        $this->withoutExceptionHandling();
+        $this->signIn();
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+        $this->patch($project->path(), ['notes' => 'Notes Test'])
+            ->assertRedirect($project->path());
+        $this->assertDatabaseHas('projects', [
+            'notes' => 'Notes Test',
+        ]);
     }
 
     /**
@@ -67,6 +88,16 @@ class ManageProjectsTest extends TestCase
         $this->signIn();
         $project = Project::factory()->create(['owner_id' => User::factory()->create()->id]);
         $this->get($project->path())
+            ->assertStatus(403);
+    }
+    /**
+     * @test
+     */
+    public function an_authenticated_user_cannot_update_the_project_of_others()
+    {
+        $this->signIn();
+        $project = Project::factory()->create(['owner_id' => User::factory()->create()->id]);
+        $this->patch($project->path(),[])
             ->assertStatus(403);
     }
 

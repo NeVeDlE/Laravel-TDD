@@ -36,8 +36,16 @@
             </div>
 
             <div class="mb-8">
-                <h2 class="text-gray-400 font-normal text-lg mb-3">General Notes</h2>
-                <textarea class="bg-white p-5 rounded shadow w-full" style="min-height: 200px"></textarea>
+                <form action="{{$project->path()}}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <h2 class="text-gray-400 font-normal text-lg mb-3">General Notes</h2>
+                    <textarea class="bg-white p-5 rounded shadow w-full" name="notes"
+                              style="min-height: 200px" placeholder="">{{$project->notes}}</textarea>
+                    <button class="bg-blue-500 text-white uppercase font-semibold
+                            text-xs py-2 px-10 rounded-2xl hover:bg-blue-600">Submit
+                    </button>
+                </form>
             </div>
 
         </div>

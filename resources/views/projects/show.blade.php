@@ -1,9 +1,16 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <p class="text-gray-500 font-normal text-md">
-            <a href="/projects">My Projects </a> / {{$project->title}}
-        </p>
+        <div class="flex justify-between items-end mb-3 text-center my-2">
+            <p class="text-gray-500 font-normal text-md">
+                <a href="/projects">My Projects </a> / {{$project->title}}
+            </p>
+            <button
+                class="bg-blue-500 text-white uppercase font-semibold text-xs py-2 px-10 rounded-2xl hover:bg-blue-600">
+                <a href="{{$project->path()}}/edit" class="text-white">Edit Project</a>
+            </button>
+        </div>
+
     </x-slot>
 
     <div class="flex -mx-3">
@@ -53,6 +60,13 @@
             <x-card :project="$project"/>
         </div>
     </div>
+    @if($errors->any())
+        <div class="text-red-600 font-normal text-lg mb-3">
+            @foreach($errors as $error)
+                <li>{{$error}}</li>
+            @endforeach
+        </div>
+    @endif
 
 
 </x-app-layout>

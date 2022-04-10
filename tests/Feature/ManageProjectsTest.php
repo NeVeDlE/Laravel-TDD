@@ -19,9 +19,11 @@ class ManageProjectsTest extends TestCase
      */
     public function guests_cannot_manage_projects()
     {
+
         $project = Project::factory()->create();
         $this->get($project->path())->assertRedirect('login');
         $this->get('/projects')->assertRedirect('login');
+        $this->get($project->path() . '/edit')->assertRedirect('login');
         $this->get('/projects/create')->assertRedirect('login');
         $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
@@ -31,7 +33,6 @@ class ManageProjectsTest extends TestCase
      */
     public function a_user_can_create_a_project()
     {
-
 
         $this->signIn();
         $this->get('/projects/create')->assertViewIs('projects.create');
@@ -57,11 +58,23 @@ class ManageProjectsTest extends TestCase
     {
         $project = ProjectFactory::create();
         $this->actingAs($project->owner)
-            ->patch($project->path(), ['notes' => 'Notes Test'])
+            ->patch($project->path(), $atr = ['notes' => 'Notes Test', 'title' => 'changed', 'description' => 'changed'])
             ->assertRedirect($project->path());
-        $this->assertDatabaseHas('projects', [
-            'notes' => 'Notes Test',
-        ]);
+        $this->assertDatabaseHas('projects', $atr);
+        $this->get($project->path() . '/edit')->assertOk();
+    }
+
+    /**
+     * @test
+     */
+    public function a_user_can_update_a_projects_general_notes()
+    {
+        $project = ProjectFactory::create();
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $atr = ['notes' => 'Notes Test']);
+
+        $this->assertDatabaseHas('projects', $atr);
+
     }
 
     /**

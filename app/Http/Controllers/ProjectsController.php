@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 
 class ProjectsController extends Controller
@@ -31,23 +32,31 @@ class ProjectsController extends Controller
     public function store()
     {
 
-        $atr = request()->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3',
-        ]);
-        $project = auth()->user()->projects()->create($atr);
+        $project = auth()->user()->projects()->create($this->validateRequest());
         /*  $atr['owner_id'] = auth()->id();
           Project::create($atr);*/
         return redirect($project->path());
     }
 
-    public function update(Project $project)
+    public function edit(Project $project)
     {
-        $this->authorize('update', $project);
-        $project->update([
-            'notes' => request('notes')
+        return view('projects.edit', [
+            'project' => $project
         ]);
-        return redirect($project->path());
     }
+
+    public function update(UpdateProjectRequest $request)
+    {
+        return redirect($request->save()->path());
+    }
+
+    protected function validateRequest()
+    {
+        return request()->validate([
+            'title' => 'sometimes|required',
+            'description' => 'sometimes|required',
+            'notes' => 'nullable',
+        ]);
+    }
+
 }

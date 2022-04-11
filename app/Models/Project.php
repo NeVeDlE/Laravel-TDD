@@ -28,11 +28,24 @@ class Project extends Model
 
     public function addTask($body)
     {
-        return $this->tasks()->create(['body' => $body, 'project_id' => $this->id]);
+        return $this->tasks()->create([
+            'body' => $body,
+            'project_id' => $this->id
+        ]);
     }
 
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * @param string $type
+     */
+    public function recordActivity($description)
+    {
+        $this->activity()->create([
+            'description' => $description
+        ]);
     }
 }

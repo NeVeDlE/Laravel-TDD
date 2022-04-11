@@ -22,4 +22,14 @@ class Task extends Model
     {
         return $this->project->path() . '/tasks/' . $this->id;
     }
+
+    public function complete()
+    {
+        $this->update(['completed' => true]);
+    }
+    public function incomplete()
+    {
+        $this->update(['completed' => false]);
+    }
+
 }

@@ -17,6 +17,7 @@
 
             <div class="w-1/3 px-3 pb-6">
                 <x-card :project="$project"/>
+
             </div>
 
         @empty

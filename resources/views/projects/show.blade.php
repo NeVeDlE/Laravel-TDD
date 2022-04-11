@@ -58,6 +58,16 @@
         </div>
         <div class="w-1/4 px-3">
             <x-card :project="$project"/>
+            <div class="bg-white p-5 rounded shadow mt-3" style="">
+                <ul>
+                    @foreach ($project->activity as $activity)
+                        <li class="{{ $loop->last ? '' : 'mb-1' }}">
+                            @include ("projects.activity.{$activity->description}")
+                            <span class="text-gray-400">{{ $activity->created_at->diffForHumans(null, true) }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
     </div>
     @if($errors->any())

@@ -17,18 +17,6 @@ class ProjectObserver
         $project->recordActivity('created');
     }
 
-
-    /**
-     * Handle the Project "updating" event.
-     *
-     * @param \App\Models\Project $project
-     * @return void
-     */
-    public function updating(Project $project)
-    {
-        $project->old = $project->getOriginal();
-    }
-
     /**
      * Handle the Project "updated" event.
      *
@@ -38,39 +26,6 @@ class ProjectObserver
     public function updated(Project $project)
     {
         $project->recordActivity('updated');
-    }
-
-    /**
-     * Handle the Project "deleted" event.
-     *
-     * @param \App\Models\Project $project
-     * @return void
-     */
-    public function deleted(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Handle the Project "restored" event.
-     *
-     * @param \App\Models\Project $project
-     * @return void
-     */
-    public function restored(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Handle the Project "force deleted" event.
-     *
-     * @param \App\Models\Project $project
-     * @return void
-     */
-    public function forceDeleted(Project $project)
-    {
-        //
     }
 
 

@@ -17,6 +17,7 @@ class TaskObserver
         $task->recordActivity('created_task');
     }
 
+
     /**
      * Handle the Task "updated" event.
      *
@@ -40,27 +41,7 @@ class TaskObserver
         $task->recordActivity('deleted_task');
     }
 
-    /**
-     * Handle the Task "restored" event.
-     *
-     * @param \App\Models\Task $task
-     * @return void
-     */
-    public function restored(Task $task)
-    {
-        //
-    }
 
-    /**
-     * Handle the Task "force deleted" event.
-     *
-     * @param \App\Models\Task $task
-     * @return void
-     */
-    public function forceDeleted(Task $task)
-    {
-        //
-    }
 
 
 }

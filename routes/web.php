@@ -15,10 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', [ProjectsController::class, 'index']);
     Route::get('/projects', [ProjectsController::class, 'index']);
     Route::get('/projects/create', [ProjectsController::class, 'create']);
     Route::get('/projects/{project:id}', [ProjectsController::class, 'show']);

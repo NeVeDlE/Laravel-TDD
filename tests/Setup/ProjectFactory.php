@@ -11,7 +11,7 @@ class ProjectFactory
 {
     protected $tasksCount = 0;
     protected $activityCount = 0;
-    protected $user;
+    protected User $user;
 
     public function withTasks($count): ProjectFactory
     {

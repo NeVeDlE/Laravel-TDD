@@ -5,10 +5,9 @@
             <p class="text-gray-500 font-normal text-md">
                 <a href="/projects">My Projects </a> / {{$project->title}}
             </p>
-            <button
-                class="bg-blue-500 text-white uppercase font-semibold text-xs py-2 px-10 rounded-2xl hover:bg-blue-600">
-                <a href="{{$project->path()}}/edit" class="text-white">Edit Project</a>
-            </button>
+            <a class="bg-blue-500 text-white uppercase font-semibold text-xs py-2 px-10 rounded-2xl hover:bg-blue-600"
+                href="{{$project->path()}}/edit" class="text-white">Edit Project
+            </a>
         </div>
 
     </x-slot>
